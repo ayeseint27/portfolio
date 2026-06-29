@@ -1,301 +1,1559 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aye Seint Portfolio</title>
+    <title>Aye Seint | Web & Flutter Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Aglience&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+
     <style>
-      .font-aglience {
-        font-family: "Aglience", cursive;
+      :root {
+        --bg: #fdf8f9;
+        --bg-secondary: #fff5f7;
+        --fg: #2d2a2b;
+        --fg-muted: #6b5f62;
+        --accent: #d4899a;
+        --accent-light: #f8c8dc;
+        --accent-dark: #c47084;
+        --card: rgba(255, 255, 255, 0.7);
+        --card-border: rgba(248, 200, 220, 0.4);
+        --glass: rgba(255, 255, 255, 0.6);
       }
-    </style>
-    <style>
-      .fade-up {
-        opacity: 0;
-        transform: translateY(20px);
-        animation: fadeUp 1s ease forwards;
+
+      [data-theme="dark"] {
+        --bg: #1a1618;
+        --bg-secondary: #231e20;
+        --fg: #f5ecef;
+        --fg-muted: #b8a3a9;
+        --accent: #e8a3b5;
+        --accent-light: #d4899a;
+        --accent-dark: #f0b8c7;
+        --card: rgba(45, 38, 40, 0.8);
+        --card-border: rgba(212, 137, 154, 0.3);
+        --glass: rgba(35, 30, 32, 0.7);
       }
-      @keyframes fadeUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        line-height: 1.6;
+        overflow-x: hidden;
+        transition:
+          background 0.4s ease,
+          color 0.4s ease;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+      }
+
+      /* Background decoration */
+      .bg-decoration {
+        position: fixed;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+        animation: float 20s ease-in-out infinite;
+      }
+
+      .blob-1 {
+        width: 600px;
+        height: 600px;
+        background: var(--accent-light);
+        top: -200px;
+        right: -200px;
+        animation-delay: 0s;
+      }
+
+      .blob-2 {
+        width: 400px;
+        height: 400px;
+        background: var(--accent);
+        bottom: -100px;
+        left: -100px;
+        animation-delay: -5s;
+      }
+
+      .blob-3 {
+        width: 300px;
+        height: 300px;
+        background: var(--accent-light);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation-delay: -10s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
         }
+        25% {
+          transform: translate(30px, -30px) scale(1.05);
+        }
+        50% {
+          transform: translate(-20px, 20px) scale(0.95);
+        }
+        75% {
+          transform: translate(20px, 30px) scale(1.02);
+        }
+      }
+
+      /* Glass card effect */
+      .glass-card {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .glass-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(212, 137, 154, 0.15);
+      }
+
+      /* Navigation */
+      .nav-link {
+        position: relative;
+        color: var(--fg-muted);
+        transition: color 0.3s ease;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--accent);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--accent);
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--accent) 0%,
+          var(--accent-dark) 100%
+        );
+        color: white;
+        padding: 14px 32px;
+        border-radius: 50px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(212, 137, 154, 0.4);
+      }
+
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(212, 137, 154, 0.5);
+      }
+
+      .btn-primary:hover::before {
+        left: 100%;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--accent);
+        padding: 14px 32px;
+        border-radius: 50px;
+        font-weight: 500;
+        border: 2px solid var(--accent);
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: var(--accent);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      /* Hero section */
+      .hero-title {
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+      }
+
+      .hero-subtitle {
+        font-size: clamp(1.2rem, 3vw, 1.5rem);
+        color: var(--accent-dark);
+        font-style: italic;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: var(--glass);
+        border: 1px solid var(--card-border);
+        border-radius: 999px;
+        color: var(--fg-muted);
+        font-size: 0.92rem;
+        font-weight: 500;
+      }
+
+      .story-card {
+        background: var(--glass);
+        backdrop-filter: blur(18px);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .story-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 36px rgba(212, 137, 154, 0.14);
+      }
+
+      .journey-item {
+        position: relative;
+        padding-left: 2.75rem;
+      }
+
+      .journey-item::before {
+        content: "";
+        position: absolute;
+        left: 11px;
+        top: 2.25rem;
+        bottom: -1.5rem;
+        width: 2px;
+        background: var(--card-border);
+      }
+
+      .journey-item:last-child::before {
+        display: none;
+      }
+
+      .journey-dot {
+        position: absolute;
+        left: 0;
+        top: 0.25rem;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-light));
+        box-shadow: 0 0 0 8px rgba(212, 137, 154, 0.14);
+      }
+
+      /* Project cards */
+      .project-card {
+        background: var(--card);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid var(--card-border);
+      }
+
+      .project-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(212, 137, 154, 0.2);
+      }
+
+      .project-image {
+        height: 200px;
+        background: linear-gradient(
+          135deg,
+          var(--accent-light) 0%,
+          var(--accent) 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      .project-image::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      }
+
+      .tech-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--accent-light);
+        color: var(--accent-dark);
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-right: 6px;
+        margin-bottom: 6px;
+      }
+
+      /* Skills section */
+      .skill-category {
+        background: var(--glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .skill-category:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 30px rgba(212, 137, 154, 0.1);
+      }
+
+      .skill-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: var(--bg);
+        border-radius: 12px;
+        margin: 4px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .skill-item:hover {
+        background: var(--accent-light);
+        color: var(--accent-dark);
+        transform: scale(1.05);
+      }
+
+      /* Form styles */
+      .form-input {
+        width: 100%;
+        padding: 16px 20px;
+        background: var(--bg);
+        border: 2px solid var(--card-border);
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 1rem;
+        color: var(--fg);
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(212, 137, 154, 0.15);
+      }
+
+      .form-input::placeholder {
+        color: var(--fg-muted);
+      }
+
+      /* Social links */
+      .social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: var(--glass);
+        border: 1px solid var(--card-border);
+        border-radius: 50%;
+        color: var(--fg-muted);
+        transition: all 0.3s ease;
+      }
+
+      .social-link:hover {
+        background: var(--accent);
+        color: white;
+        transform: translateY(-4px) rotate(8deg);
+        box-shadow: 0 8px 20px rgba(212, 137, 154, 0.3);
+      }
+
+      /* Theme toggle */
+      .theme-toggle {
+        position: relative;
+        width: 60px;
+        height: 32px;
+        background: var(--glass);
+        border: 1px solid var(--card-border);
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle::before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 24px;
+        height: 24px;
+        background: var(--accent);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(212, 137, 154, 0.4);
+      }
+
+      [data-theme="dark"] .theme-toggle::before {
+        left: calc(100% - 27px);
+      }
+
+      /* Section animations */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Stagger children */
+      .stagger > * {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .stagger.active > *:nth-child(1) {
+        transition-delay: 0.1s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .stagger.active > *:nth-child(2) {
+        transition-delay: 0.2s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .stagger.active > *:nth-child(3) {
+        transition-delay: 0.3s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .stagger.active > *:nth-child(4) {
+        transition-delay: 0.4s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .stagger.active > *:nth-child(5) {
+        transition-delay: 0.5s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .stagger.active > *:nth-child(6) {
+        transition-delay: 0.6s;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Floating particles */
+      .particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: var(--accent-light);
+        border-radius: 50%;
+        opacity: 0.6;
+        animation: particle-float 15s linear infinite;
+      }
+
+      @keyframes particle-float {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.6;
+        }
+        90% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: translateY(-100vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      /* Section title */
+      .section-title {
+        font-size: clamp(2rem, 5vw, 3rem);
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        border-radius: 2px;
+      }
+
+      /* Mobile nav */
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background: var(--bg);
+        z-index: 100;
+        padding: 2rem;
+        transition: right 0.3s ease;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .mobile-menu.active {
+        right: 0;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
       }
     </style>
   </head>
-  <body class="bg-white text-gray-800">
-    <!-- Navbar -->
-    <nav class="w-full fixed top-0 left-0 bg-white shadow-sm z-50">
-      <div
-        class="max-w-6xl mx-auto px-5 py-3 flex justify-between items-center"
-      >
-        <h1 class="text-2xl font-aglience text-pink-500">Aye Seint</h1>
-        <div class="space-x-6 text-gray-600">
-          <a href="#home" class="hover:text-pink-500">Home</a>
-          <a href="#about" class="hover:text-pink-500">About</a>
-          <a href="#skills" class="hover:text-pink-500">Skills</a>
-          <a href="#projects" class="hover:text-pink-500">Projects</a>
-          <a href="#contact" class="hover:text-pink-500">Contact</a>
-        </div>
-      </div>
-    </nav>
+  <body>
+    <!-- Background decoration -->
+    <div class="bg-decoration">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div id="particles"></div>
+    </div>
 
-    <!-- Hero Section -->
-    <section
-      id="home"
-      class="fade-up min-h-screen flex items-center justify-center bg-pink-50 pt-20"
-    >
-      <div
-        class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 items-center"
-      >
-        <!-- Left: Photo -->
-        <div
-          class="flex justify-center md:justify-start fade-up"
-          style="animation-delay: 0.2s"
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <button id="closeMenu" class="absolute top-6 right-6 p-2">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
         >
-          <img
-            src="photo_2025-05-04_16-08-13.jpg"
-            alt="Profile Photo"
-            class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-lg border-4 border-pink-100"
-          />
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <nav class="flex flex-col gap-6 mt-16">
+        <a href="#home" class="nav-link text-lg">Home</a>
+        <a href="#about" class="nav-link text-lg">About</a>
+        <a href="#experience" class="nav-link text-lg">Experience</a>
+        <a href="#projects" class="nav-link text-lg">Projects</a>
+        <a href="#skills" class="nav-link text-lg">Skills</a>
+        <a href="#education" class="nav-link text-lg">Education</a>
+        <a href="#contact" class="nav-link text-lg">Contact</a>
+      </nav>
+    </div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+      <nav class="max-w-6xl mx-auto flex items-center justify-between">
+        <a
+          href="#home"
+          class="text-2xl font-bold"
+          style="
+            font-family: &quot;Playfair Display&quot;, serif;
+            font-style: italic;
+            color: var(--accent);
+          "
+        >
+          AS
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#home" class="nav-link">Home</a>
+          <a href="#about" class="nav-link">About</a>
+          <a href="#experience" class="nav-link">Experience</a>
+          <a href="#projects" class="nav-link">Projects</a>
+          <a href="#skills" class="nav-link">Skills</a>
+          <a href="#education" class="nav-link">Education</a>
+          <a href="#contact" class="nav-link">Contact</a>
         </div>
 
-        <!-- Right: Text -->
-        <div
-          class="text-center md:text-left px-4 fade-up"
-          style="animation-delay: 0.4s"
-        >
-          <h2 class="text-4xl md:text-6xl font-bold text-gray-800">
-            Hello, I'm
-            <span class="text-pink-500 font-aglience"
-              >Aye Seint Seint Chan</span
+        <div class="flex items-center gap-4">
+          <div
+            class="theme-toggle"
+            id="themeToggle"
+            role="button"
+            tabindex="0"
+            aria-label="Toggle theme"
+          ></div>
+
+          <!-- Mobile menu button -->
+          <button id="menuBtn" class="md:hidden p-2">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
             >
-          </h2>
-          <p class="mt-4 text-lg md:text-xl text-gray-600">
-            A passionate Web Developer & Back End Developer from Myanmar.
-          </p>
-          <button
-            class="mt-6 px-8 py-3 bg-pink-500 text-white rounded-full shadow hover:bg-pink-600"
-          >
-            Hire Me
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
           </button>
         </div>
-      </div>
-    </section>
+      </nav>
+    </header>
 
-    <!-- About Section -->
-    <section
-      id="about"
-      class="fade-up relative max-w-6xl mx-auto px-5 py-20 bg-white rounded-2xl shadow-lg"
-    >
-      <h3 class="text-3xl font-bold text-gray-800 mb-6">About Me</h3>
-      <p class="text-gray-600 leading-relaxed text-lg">
-        I am a motivated and detail-oriented computer science student with a
-        strong interest in software testing, cloud computing, and web
-        development. Through academic projects and internships, I’ve gained
-        hands-on experience in both frontend and backend development using tools
-        like JavaEE, Bootstrap, Ajax, jQuery, Laravel, and MySQL. I enjoy
-        solving problems, collaborating in team environments, and continuously
-        learning new technologies. My ability to adapt quickly, combined with a
-        strong sense of responsibility and a passion for quality, makes me a
-        valuable contributor to any IT project.
-      </p>
-    </section>
-
-    <!-- Skills Section -->
-    <section
-      id="skills"
-      class="fade-up max-w-6xl mx-auto px-5 py-20 bg-pink-50 rounded-2xl"
-    >
-      <h3 class="text-3xl font-bold text-gray-800 mb-10 text-center">Skills</h3>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          HTML
-        </div>
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          CSS
-        </div>
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          JavaScript
-        </div>
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          Laravel
-        </div>
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          PHP
-        </div>
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          Flutter
-        </div>
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          Firebase
-        </div>
-        <div
-          class="p-5 bg-white shadow rounded-xl cursor-pointer transform transition duration-500 hover:-translate-y-2 hover:scale-105 hover:bg-pink-100"
-        >
-          MySQL
-        </div>
-      </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="fade-up max-w-6xl mx-auto px-5 py-20">
-      <h3 class="text-3xl font-bold text-gray-800 mb-10 text-center">
-        Projects
-      </h3>
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="p-6 bg-white shadow-lg rounded-2xl">
-          <h4 class="text-xl font-semibold text-gray-800">
-            Traveler's Handbook
-          </h4>
-          <p class="text-gray-600 mt-2">
-            A responsive website and mobile application for discovering hidden
-            places in Mon State. Developed as my fourth-year university project,
-            it received second place in the university project competition.
-          </p>
-          <div class="mt-4 flex space-x-2">
-            <a
-              href="#"
-              class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"
-              >View Project</a
-            >
-            <a
-              href="#"
-              class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-              >GitHub</a
-            >
-            <a
-              href="#"
-              class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-              >Details</a
-            >
-          </div>
-        </div>
-
-        <div class="p-6 bg-white shadow-lg rounded-2xl">
-          <h4 class="text-xl font-semibold text-gray-800">
-            Chatbot for IT Term Support
-          </h4>
-          <p class="text-gray-600 mt-2">
-            A chatbot application designed to assist IT students with technical
-            questions and support. Developed using Python and the Flask
-            framework as my final-year university project.
-          </p>
-          <div class="mt-4 flex space-x-2">
-            <a
-              href="#"
-              class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"
-              >View Project</a
-            >
-            <a
-              href="#"
-              class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-              >GitHub</a
-            >
-            <a
-              href="#"
-              class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-              >Details</a
-            >
-          </div>
-        </div>
-
-        <div class="p-6 bg-white shadow-lg rounded-2xl">
-          <h4 class="text-xl font-semibold text-gray-800">FlutterFlix</h4>
-          <p class="text-gray-600 mt-2">
-            A Netflix-style movie application built with Flutter, Firebase, and
-            Supabase. Developed to gain practical experience with mobile app
-            development and cloud integration.
-          </p>
-          <div class="mt-4 flex space-x-2">
-            <a
-              href="#"
-              class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600"
-              >View Project</a
-            >
-            <a
-              href="#"
-              class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-              >GitHub</a
-            >
-            <a
-              href="#"
-              class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-              >Details</a
-            >
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section
-      id="contact"
-      class="fade-up max-w-6xl mx-auto px-5 py-20 bg-pink-50 rounded-2xl shadow-lg"
-    >
-      <h3 class="text-3xl font-bold text-gray-800 mb-10 text-center">
-        Contact
-      </h3>
-      <div
-        class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-6 mt-6"
+    <main class="relative z-10">
+      <!-- Hero Section -->
+      <section
+        id="home"
+        class="min-h-screen flex items-center justify-center px-6 pt-20"
       >
-        <div class="text-center md:text-left">
-          <p class="text-gray-700 mb-2">
-            Email:
-            <a
-              href="mailto:seintseintucstt061@gmail.com"
-              class="text-pink-500 hover:underline"
-              >seintseintucstt061@gmail.com</a
-            >
+        <div class="max-w-4xl mx-auto text-center stagger" id="heroContent">
+          <p
+            class="text-lg mb-4"
+            style="color: var(--accent); font-weight: 500"
+          >
+            Hello, I'm
           </p>
-        </div>
-        <div class="flex space-x-4">
-          <a
-            href="https://github.com/ayeseint27"
-            target="_blank"
-            class="px-5 py-2 bg-gray-800 text-white rounded-lg shadow hover:bg-gray-900 transition"
-            >GitHub</a
+          <h1 class="hero-title" style="color: var(--fg)">Aye Seint</h1>
+          <p
+            class="hero-subtitle"
+            style="font-family: &quot;Playfair Display&quot;, serif"
           >
-          <a
-            href="https://www.linkedin.com/in/aye-seint-seint-chan-1939082ab"
-            target="_blank"
-            class="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-            >LinkedIn</a
+            Web & Flutter Developer
+          </p>
+          <p
+            class="text-lg mb-8 max-w-2xl mx-auto"
+            style="color: var(--fg-muted)"
           >
+            I build responsive websites, Laravel systems, and Flutter mobile
+            apps with a careful eye for clean interfaces, reliable features,
+            and user-friendly details.
+          </p>
+          <div class="flex flex-wrap gap-3 justify-center mb-8">
+            <span class="hero-badge">Laravel + PHP</span>
+            <span class="hero-badge">Flutter Mobile Apps</span>
+            <span class="hero-badge">QA-minded development</span>
+          </div>
+          <div class="flex flex-wrap gap-4 justify-center">
+            <a href="#projects" class="btn-primary">View Projects</a>
+            <a href="#experience" class="btn-secondary">My Experience</a>
+          </div>
         </div>
+      </section>
 
-        <a
-          href="CV_AyeSeint.pdf"
-          target="_blank"
-          class="px-5 py-2 bg-pink-500 text-white rounded-lg shadow hover:bg-pink-600 transition"
-        >
-          Download CV
-        </a>
-      </div>
-    </section>
+      <!-- About Section -->
+      <section id="about" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+          <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="reveal">
+              <h2 class="section-title">About Me</h2>
+              <div class="glass-card p-8 mt-8">
+                <p class="text-lg mb-6" style="color: var(--fg-muted)">
+                  I'm a Computer Science student from Thaton, Myanmar, focused
+                  on building practical digital products that are simple to use
+                  and dependable in real life.
+                </p>
+                <p class="mb-6" style="color: var(--fg-muted)">
+                  My work moves across web and mobile development: Laravel and
+                  PHP for structured backend systems, MySQL for data, and
+                  Flutter for clean cross-platform mobile apps. I also bring a
+                  QA mindset, so I think about testing, usability, and edge
+                  cases while I build.
+                </p>
+                <p class="mb-6" style="color: var(--fg-muted)">
+                  I am currently growing my skills in cloud computing and
+                  modern development practices. Through study, internships, and
+                  hands-on projects, I have learned to solve problems with
+                  patience, communicate clearly, and keep improving each
+                  version of my work.
+                </p>
+                <div class="flex flex-wrap gap-3 mt-6">
+                  <span class="tech-tag">Laravel</span>
+                  <span class="tech-tag">Flutter</span>
+                  <span class="tech-tag">PHP</span>
+                  <span class="tech-tag">MySQL</span>
+                  <span class="tech-tag">QA Testing</span>
+                  <span class="tech-tag">Cloud Computing</span>
+                </div>
+              </div>
+            </div>
+            <div class="reveal" style="transition-delay: 0.2s">
+              <div class="glass-card p-8">
+                <h3
+                  class="text-xl font-semibold mb-6"
+                  style="
+                    font-family: &quot;Playfair Display&quot;, serif;
+                    font-style: italic;
+                  "
+                >
+                  Quick Facts
+                </h3>
+                <div class="space-y-4">
+                  <div
+                    class="flex items-center gap-4 p-4 rounded-xl"
+                    style="background: var(--bg)"
+                  >
+                    <div
+                      class="w-12 h-12 rounded-full flex items-center justify-center"
+                      style="background: var(--accent-light)"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="var(--accent-dark)"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                        />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-medium">Location</p>
+                      <p style="color: var(--fg-muted)">Thaton, Myanmar</p>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center gap-4 p-4 rounded-xl"
+                    style="background: var(--bg)"
+                  >
+                    <div
+                      class="w-12 h-12 rounded-full flex items-center justify-center"
+                      style="background: var(--accent-light)"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="var(--accent-dark)"
+                        stroke-width="2"
+                      >
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-medium">Education</p>
+                      <p style="color: var(--fg-muted)">
+                        Computer Science Student
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center gap-4 p-4 rounded-xl"
+                    style="background: var(--bg)"
+                  >
+                    <div
+                      class="w-12 h-12 rounded-full flex items-center justify-center"
+                      style="background: var(--accent-light)"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="var(--accent-dark)"
+                        stroke-width="2"
+                      >
+                        <rect
+                          x="2"
+                          y="7"
+                          width="20"
+                          height="14"
+                          rx="2"
+                          ry="2"
+                        />
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p class="font-medium">Focus Areas</p>
+                      <p style="color: var(--fg-muted)">
+                        Web & Mobile Development
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Experience Section -->
+      <section
+        id="experience"
+        class="py-24 px-6"
+        style="background: var(--bg-secondary)"
+      >
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-16 reveal">
+            <h2 class="section-title mx-auto">My Journey</h2>
+            <p class="mt-6 text-lg max-w-2xl mx-auto" style="color: var(--fg-muted)">
+              A simple look at how I am growing from student projects into
+              real-world web, mobile, and quality-focused development.
+            </p>
+          </div>
+
+          <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+            <div class="glass-card p-8 md:p-10 reveal">
+              <div class="space-y-10">
+                <article class="journey-item">
+                  <span class="journey-dot" aria-hidden="true"></span>
+                  <p class="text-sm font-semibold mb-2" style="color: var(--accent)">
+                    Foundation
+                  </p>
+                  <h3
+                    class="text-xl font-semibold mb-3"
+                    style="font-family: &quot;Playfair Display&quot;, serif; font-style: italic"
+                  >
+                    Computer Science Student
+                  </h3>
+                  <p style="color: var(--fg-muted)">
+                    I built my core programming foundation through computer
+                    science studies, learning how to think logically, work with
+                    data, and turn ideas into working software.
+                  </p>
+                </article>
+
+                <article class="journey-item">
+                  <span class="journey-dot" aria-hidden="true"></span>
+                  <p class="text-sm font-semibold mb-2" style="color: var(--accent)">
+                    Web Development
+                  </p>
+                  <h3
+                    class="text-xl font-semibold mb-3"
+                    style="font-family: &quot;Playfair Display&quot;, serif; font-style: italic"
+                  >
+                    Laravel, PHP, and Database Projects
+                  </h3>
+                  <p style="color: var(--fg-muted)">
+                    I created practical systems such as booking, quiz, and
+                    jewellery shop management projects, focusing on clean CRUD
+                    flows, database structure, and useful admin features.
+                  </p>
+                </article>
+
+                <article class="journey-item">
+                  <span class="journey-dot" aria-hidden="true"></span>
+                  <p class="text-sm font-semibold mb-2" style="color: var(--accent)">
+                    Mobile Development
+                  </p>
+                  <h3
+                    class="text-xl font-semibold mb-3"
+                    style="font-family: &quot;Playfair Display&quot;, serif; font-style: italic"
+                  >
+                    Flutter App Builder
+                  </h3>
+                  <p style="color: var(--fg-muted)">
+                    I expanded into Flutter to build mobile experiences like
+                    movie, music, and travel apps, combining interface design
+                    with APIs, Firebase, and Supabase.
+                  </p>
+                </article>
+
+                <article class="journey-item">
+                  <span class="journey-dot" aria-hidden="true"></span>
+                  <p class="text-sm font-semibold mb-2" style="color: var(--accent)">
+                    Professional Growth
+                  </p>
+                  <h3
+                    class="text-xl font-semibold mb-3"
+                    style="font-family: &quot;Playfair Display&quot;, serif; font-style: italic"
+                  >
+                    Internship and QA Mindset
+                  </h3>
+                  <p style="color: var(--fg-muted)">
+                    My internship experience helped me become more disciplined
+                    about communication, testing, debugging, and improving
+                    software based on real feedback.
+                  </p>
+                </article>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-1 gap-6 reveal" style="transition-delay: 0.2s">
+              <div class="story-card">
+                <p class="text-sm font-semibold mb-2" style="color: var(--accent)">
+                  What I Build
+                </p>
+                <p class="text-2xl font-semibold mb-2">Web systems + mobile apps</p>
+                <p style="color: var(--fg-muted)">
+                  From admin dashboards and CRUD systems to Flutter app screens
+                  that feel clear and easy to use.
+                </p>
+              </div>
+              <div class="story-card">
+                <p class="text-sm font-semibold mb-2" style="color: var(--accent)">
+                  How I Work
+                </p>
+                <p class="text-2xl font-semibold mb-2">Clean, careful, test-aware</p>
+                <p style="color: var(--fg-muted)">
+                  I care about readable code, good database planning, smooth UI,
+                  and checking details before delivery.
+                </p>
+              </div>
+              <div class="story-card">
+                <p class="text-sm font-semibold mb-2" style="color: var(--accent)">
+                  Next Step
+                </p>
+                <p class="text-2xl font-semibold mb-2">Cloud and stronger deployment</p>
+                <p style="color: var(--fg-muted)">
+                  I am improving my cloud knowledge so my projects can become
+                  more reliable, scalable, and production-ready.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects Section -->
+      <section
+        id="projects"
+        class="py-24 px-6"
+      >
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-16 reveal">
+            <h2 class="section-title mx-auto">My Projects</h2>
+            <p class="mt-6 text-lg" style="color: var(--fg-muted)">
+              A showcase of my recent work
+            </p>
+          </div>
+
+          <div
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger"
+            id="projectsGrid"
+          >
+            <!-- Project cards will be inserted by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Skills Section -->
+      <section id="skills" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-16 reveal">
+            <h2 class="section-title mx-auto">Skills & Tools</h2>
+            <p class="mt-6 text-lg" style="color: var(--fg-muted)">
+              Technologies I work with
+            </p>
+          </div>
+
+          <div
+            class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 stagger"
+            id="skillsGrid"
+          >
+            <!-- Skills will be inserted by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Education Section -->
+      <section
+        id="education"
+        class="py-24 px-6"
+        style="background: var(--bg-secondary)"
+      >
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-16 reveal">
+            <h2 class="section-title mx-auto">Education</h2>
+          </div>
+
+          <div class="glass-card p-8 md:p-12 reveal">
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+              <div
+                class="w-24 h-24 rounded-full flex items-center justify-center"
+                style="
+                  background: linear-gradient(
+                    135deg,
+                    var(--accent-light),
+                    var(--accent)
+                  );
+                "
+              >
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="2"
+                >
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                </svg>
+              </div>
+              <div class="text-center md:text-left">
+                <h3
+                  class="text-2xl font-semibold mb-2"
+                  style="
+                    font-family: &quot;Playfair Display&quot;, serif;
+                    font-style: italic;
+                  "
+                >
+                  Computer Science Student
+                </h3>
+                <p class="text-lg mb-4" style="color: var(--accent)">
+                  Myanmar - Thaton
+                </p>
+                <p style="color: var(--fg-muted)">
+                  Currently pursuing my studies in Computer Science, focusing on
+                  software development, database management, and modern web
+                  technologies. My academic journey has provided a strong
+                  foundation in programming principles and problem-solving
+                  methodologies.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="py-24 px-6">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-16 reveal">
+            <h2 class="section-title mx-auto">Get In Touch</h2>
+            <p class="mt-6 text-lg" style="color: var(--fg-muted)">
+              Let's work together on your next project
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-12">
+            <div class="glass-card p-8 reveal">
+              <form id="contactForm" class="space-y-6">
+                <div>
+                  <label for="name" class="block mb-2 font-medium">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-input"
+                    placeholder="Your name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="email" class="block mb-2 font-medium"
+                    >Email</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-input"
+                    placeholder="your@email.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="message" class="block mb-2 font-medium"
+                    >Message</label
+                  >
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="4"
+                    class="form-input"
+                    placeholder="Tell me about your project..."
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn-primary w-full">
+                  Send Message
+                </button>
+              </form>
+            </div>
+
+            <div class="reveal" style="transition-delay: 0.2s">
+              <div class="glass-card p-8 h-full">
+                <h3
+                  class="text-xl font-semibold mb-6"
+                  style="
+                    font-family: &quot;Playfair Display&quot;, serif;
+                    font-style: italic;
+                  "
+                >
+                  Connect With Me
+                </h3>
+                <p class="mb-8" style="color: var(--fg-muted)">
+                  I'm always open to discussing new projects, creative ideas, or
+                  opportunities to be part of your vision.
+                </p>
+                <div class="flex gap-4">
+                  <a href="#" class="social-link" aria-label="GitHub">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                      />
+                    </svg>
+                  </a>
+                  <a href="#" class="social-link" aria-label="LinkedIn">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                      />
+                    </svg>
+                  </a>
+                  <a href="#" class="social-link" aria-label="Twitter">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    href="mailto:contact@ayeseint.dev"
+                    class="social-link"
+                    aria-label="Email"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                      />
+                      <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="text-center py-6 text-gray-500 mt-10">
-      © 2025 Aye Seint — All Rights Reserved
+    <footer class="py-8 px-6" style="background: var(--bg-secondary)">
+      <div
+        class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4"
+      >
+        <p style="color: var(--fg-muted)">
+          Designed by
+          <span
+            style="
+              color: var(--accent);
+              font-family: &quot;Playfair Display&quot;, serif;
+              font-style: italic;
+            "
+            >Aye Seint</span
+          >
+        </p>
+        <div class="flex gap-4">
+          <a
+            href="#"
+            class="social-link"
+            style="width: 40px; height: 40px"
+            aria-label="GitHub"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              />
+            </svg>
+          </a>
+          <a
+            href="#"
+            class="social-link"
+            style="width: 40px; height: 40px"
+            aria-label="LinkedIn"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
     </footer>
+
+    <script>
+      // Data
+      const projects = [
+        {
+          title: "Jewellery Shop System",
+          description:
+            "A comprehensive inventory and sales management system for jewellery businesses with invoice generation and reporting features.",
+          tech: ["C#", "ASP.NET", "MSSQL"],
+          color: "#e8b4c8",
+        },
+        {
+          title: "Event Booking CRUD",
+          description:
+            "Full-featured event booking platform with user authentication, event management, and reservation system.",
+          tech: ["Laravel", "PHP", "MySQL"],
+          color: "#d4899a",
+        },
+        {
+          title: "Quiz App",
+          description:
+            "Interactive quiz application with multiple categories, score tracking, and user performance analytics.",
+          tech: ["PHP", "MySQL", "JavaScript"],
+          color: "#c47084",
+        },
+        {
+          title: "FlutterFlix",
+          description:
+            "Netflix clone mobile application with movie browsing, search functionality, and user preferences.",
+          tech: ["Flutter", "Dart", "TMDB API"],
+          color: "#e8a3b5",
+        },
+        {
+          title: "Music App",
+          description:
+            "Feature-rich music streaming application with playlist management and real-time synchronization.",
+          tech: ["Flutter", "Supabase", "Dart"],
+          color: "#d4899a",
+        },
+        {
+          title: "Traveler's Handbook",
+          description:
+            "Travel guide application featuring destination recommendations, trip planning, and local insights.",
+          tech: ["Flutter", "Firebase", "Dart"],
+          color: "#e8b4c8",
+        },
+      ];
+
+      const skills = [
+        {
+          category: "Frontend",
+          icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+          items: ["HTML5", "CSS3", "Bootstrap", "JavaScript", "Tailwind CSS"],
+        },
+        {
+          category: "Backend",
+          icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+          items: ["PHP", "Laravel", "REST APIs"],
+        },
+        {
+          category: "Mobile",
+          icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+          items: ["Flutter", "Dart", "Cross-platform"],
+        },
+        {
+          category: "Database",
+          icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+          items: ["MySQL", "Firebase", "Supabase"],
+        },
+        {
+          category: "Tools",
+          icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+          items: ["Git", "VS Code", "Postman"],
+        },
+        {
+          category: "Other",
+          icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+          items: ["QA Testing", "Cloud Computing", "Agile"],
+        },
+      ];
+
+      // DOM Elements
+      const themeToggle = document.getElementById("themeToggle");
+      const menuBtn = document.getElementById("menuBtn");
+      const closeMenu = document.getElementById("closeMenu");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const overlay = document.getElementById("overlay");
+      const projectsGrid = document.getElementById("projectsGrid");
+      const skillsGrid = document.getElementById("skillsGrid");
+      const contactForm = document.getElementById("contactForm");
+
+      // Theme Toggle
+      function initTheme() {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+      }
+
+      themeToggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "light" ? "dark" : "light";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+      });
+
+      themeToggle.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          themeToggle.click();
+        }
+      });
+
+      // Mobile Menu
+      menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.add("active");
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      });
+
+      function closeMobileMenu() {
+        mobileMenu.classList.remove("active");
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      closeMenu.addEventListener("click", closeMobileMenu);
+      overlay.addEventListener("click", closeMobileMenu);
+
+      // Close mobile menu when clicking nav links
+      document.querySelectorAll(".mobile-menu .nav-link").forEach((link) => {
+        link.addEventListener("click", closeMobileMenu);
+      });
+
+      // Render Projects
+      function renderProjects() {
+        projectsGrid.innerHTML = projects
+          .map(
+            (project, index) => `
+                <article class="project-card">
+                    <div class="project-image" style="background: linear-gradient(135deg, ${project.color} 0%, var(--accent) 100%);">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" opacity="0.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3" style="font-family: 'Playfair Display', serif; font-style: italic;">${project.title}</h3>
+                        <p class="mb-4 text-sm" style="color: var(--fg-muted);">${project.description}</p>
+                        <div class="mb-4">
+                            ${project.tech.map((t) => `<span class="tech-tag">${t}</span>`).join("")}
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="btn-primary text-sm py-2 px-4">View</a>
+                            <a href="#" class="btn-secondary text-sm py-2 px-4">GitHub</a>
+                        </div>
+                    </div>
+                </article>
+            `,
+          )
+          .join("");
+      }
+
+      // Render Skills
+      function renderSkills() {
+        skillsGrid.innerHTML = skills
+          .map(
+            (skill) => `
+                <div class="skill-category">
+                    <div class="flex items-center gap-3 mb-4" style="color: var(--accent);">
+                        ${skill.icon}
+                        <h3 class="text-lg font-semibold" style="font-family: 'Playfair Display', serif; font-style: italic;">${skill.category}</h3>
+                    </div>
+                    <div class="flex flex-wrap">
+                        ${skill.items.map((item) => `<span class="skill-item">${item}</span>`).join("")}
+                    </div>
+                </div>
+            `,
+          )
+          .join("");
+      }
+
+      // Create Particles
+      function createParticles() {
+        const container = document.getElementById("particles");
+        const particleCount = 15;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 15 + "s";
+          particle.style.animationDuration = 15 + Math.random() * 10 + "s";
+          container.appendChild(particle);
+        }
+      }
+
+      // Scroll Reveal
+      function initScrollReveal() {
+        const reveals = document.querySelectorAll(".reveal, .stagger");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px",
+          },
+        );
+
+        reveals.forEach((el) => observer.observe(el));
+      }
+
+      // Form Handler
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const btn = contactForm.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.textContent = "Sent Successfully!";
+        btn.style.background = "linear-gradient(135deg, #4ade80, #22c55e)";
+
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = "";
+          contactForm.reset();
+        }, 3000);
+      });
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Initialize
+      function init() {
+        initTheme();
+        renderProjects();
+        renderSkills();
+        createParticles();
+
+        // Delay scroll reveal to ensure DOM is ready
+        requestAnimationFrame(() => {
+          initScrollReveal();
+
+          // Activate hero immediately
+          const hero = document.getElementById("heroContent");
+          if (hero) {
+            hero.classList.add("active");
+          }
+        });
+      }
+
+      // Run on DOM ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    </script>
   </body>
 </html>

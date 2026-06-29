@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aye Seint Seint Chan | Software Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Cormorant Garamond', 'serif'],
+                        body: ['Outfit', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --bg-primary: #fffbfc;
+            --bg-secondary: #fff5f7;
+            --bg-tertiary: #fef0f3;
+            --fg-primary: #2a2426;
+            --fg-secondary: #5c5255;
+            --fg-muted: #8a7f82;
+            --accent: #d4899a;
+            --accent-light: #f0d4de;
+            --accent-soft: #f8c8dc;
+            --accent-deep: #c47084;
+            --glass-bg: rgba(255, 255, 255, 0.72);
+            --glass-border: rgba(248, 200, 220, 0.35);
+            --card-shadow: 0 8px 32px rgba(212, 137, 154, 0.12);
+            --gradient-start: #f8c8dc;
+            --gradient-end: #e8b4c8;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1618;
+            --bg-secondary: #231e20;
+            --bg-tertiary: #2d2628;
+            --fg-primary: #faf5f6;
+            --fg-secondary: #d4c5c9;
+            --fg-muted: #9e8f93;
+            --accent: #e8a3b5;
+            --accent-light: #c47084;
+            --accent-soft: #d4899a;
+            --accent-deep: #f0b8c7;
+            --glass-bg: rgba(35, 30, 32, 0.75);
+            --glass-border: rgba(212, 137, 154, 0.25);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            --gradient-start: #d4899a;
+            --gradient-end: #c47084;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--fg-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.4s ease;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        /* Background Canvas */
+        .bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            animation: orb-float 25s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+            top: -300px;
+            right: -200px;
+        }
+
+        .orb-2 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: -8s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            top: 40%;
+            left: 30%;
+            animation-delay: -15s;
+            opacity: 0.3;
+        }
+
+        @keyframes orb-float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -40px) scale(1.08); }
+            66% { transform: translate(-30px, 30px) scale(0.95); }
+        }
+
+        /* Noise overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.03;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(212, 137, 154, 0.18);
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--fg-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            transition: width 0.3s ease;
+            border-radius: 1px;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 36px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 24px rgba(212, 137, 154, 0.35);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(212, 137, 154, 0.45);
+        }
+
+        .btn-primary:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 36px;
+            background: transparent;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            border-radius: 100px;
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(212, 137, 154, 0.3);
+        }
+
+        /* Hero Section */
+        .hero-name {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--fg-primary) 0%, var(--accent) 50%, var(--accent-deep) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-role {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            color: var(--accent);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-image {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(212, 137, 154, 0.35);
+            animation: profile-float 6s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-image::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+        }
+
+        .profile-image svg {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes profile-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .profile-ring {
+            position: absolute;
+            inset: -20px;
+            border: 2px dashed var(--accent-light);
+            border-radius: 50%;
+            animation: ring-rotate 20s linear infinite;
+        }
+
+        @keyframes ring-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Project Cards */
+        .project-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(212, 137, 154, 0.2), 0 0 0 1px var(--accent-light);
+        }
+
+        .project-thumb {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-thumb-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            background-size: 30px 30px;
+            background-image: radial-gradient(circle, var(--accent) 1px, transparent 1px);
+        }
+
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            background: var(--bg-tertiary);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 100px;
+            margin: 4px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .tech-badge:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* Skill Cards */
+        .skill-category-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .skill-category-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(212, 137, 154, 0.15);
+        }
+
+        .skill-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 4px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .skill-item:hover {
+            background: var(--accent-soft);
+            color: var(--accent-deep);
+            border-color: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .skill-progress {
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .skill-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 3px;
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .skill-progress-bar.animate {
+            transform: scaleX(1);
+        }
+
+        /* Experience Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--bg-secondary);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 32px;
+            width: 2px;
+            height: calc(100% - 24px);
+            background: linear-gradient(to bottom, var(--accent-light), transparent);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        /* Form */
+        .form-field {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 24px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--fg-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(212, 137, 154, 0.12);
+            background: var(--bg-primary);
+        }
+
+        .form-input::placeholder {
+            color: var(--fg-muted);
+        }
+
+        /* Social Links */
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            color: var(--fg-secondary);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .social-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-4px) rotate(8deg);
+            box-shadow: 0 12px 24px rgba(212, 137, 154, 0.3);
+        }
+
+        /* Theme Toggle */
+        .theme-switch {
+            position: relative;
+            width: 64px;
+            height: 34px;
+            background: var(--bg-tertiary);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .theme-switch::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 8px rgba(212, 137, 154, 0.4);
+        }
+
+        [data-theme="dark"] .theme-switch::before {
+            left: calc(100% - 28px);
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Stagger Animation */
+        .stagger-container.active > *:nth-child(1) { animation: stagger-in 0.7s 0.1s forwards; }
+        .stagger-container.active > *:nth-child(2) { animation: stagger-in 0.7s 0.2s forwards; }
+        .stagger-container.active > *:nth-child(3) { animation: stagger-in 0.7s 0.3s forwards; }
+        .stagger-container.active > *:nth-child(4) { animation: stagger-in 0.7s 0.4s forwards; }
+        .stagger-container.active > *:nth-child(5) { animation: stagger-in 0.7s 0.5s forwards; }
+        .stagger-container.active > *:nth-child(6) { animation: stagger-in 0.7s 0.6s forwards; }
+
+        @keyframes stagger-in {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .stagger-container > * {
+            opacity: 0;
+        }
+
+        /* Section Title */
+        .section-heading {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        /* Mobile Menu */
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            max-width: 360px;
+            height: 100vh;
+            background: var(--bg-primary);
+            z-index: 200;
+            padding: 2rem;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .mobile-drawer.active {
+            right: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 199;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Floating Action Card */
+        .float-card {
+            animation: card-float 4s ease-in-out infinite;
+        }
+
+        @keyframes card-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Canvas -->
+    <div class="bg-canvas">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+    <div class="noise-overlay"></div>
+
+    <!-- Mobile Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <button id="closeDrawer" class="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors" style="color: var(--fg-secondary);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+        <nav class="mt-20 flex flex-col gap-6">
+            <a href="#home" class="nav-link text-xl">Home</a>
+            <a href="#about" class="nav-link text-xl">About</a>
+            <a href="#projects" class="nav-link text-xl">Projects</a>
+            <a href="#skills" class="nav-link text-xl">Skills</a>
+            <a href="#experience" class="nav-link text-xl">Experience</a>
+            <a href="#contact" class="nav-link text-xl">Contact</a>
+        </nav>
+        <div class="mt-auto pt-12">
+            <div class="theme-switch" id="mobileThemeToggle" role="button" tabindex="0" aria-label="Toggle theme"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="nav-container fixed top-0 left-0 right-0 z-50">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#home" class="text-2xl font-display italic" style="color: var(--accent);">ASSC</a>
+            
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#skills" class="nav-link">Skills</a>
+                <a href="#experience" class="nav-link">Experience</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="theme-switch hidden sm:block" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme"></div>
+                <button id="menuBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full" style="background: var(--glass-bg);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12h18M3 6h18M3 18h18"/>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section id="home" class="min-h-screen flex items-center pt-20 px-6">
+            <div class="max-w-7xl mx-auto w-full">
+                <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                    <div class="order-2 lg:order-1">
+                        <p class="text-lg font-medium mb-4" style="color: var(--accent);">Hello, I'm</p>
+                        <h1 class="hero-name">Aye Seint Seint Chan</h1>
+                        <p class="hero-role font-display">Web Developer & Flutter Developer</p>
+                        <p class="mt-6 text-lg leading-relaxed max-w-xl" style="color: var(--fg-secondary);">
+                            I build modern web and mobile applications using Laravel, Flutter, Firebase, and Supabase. 
+                            Passionate about QA testing, backend systems, and cloud computing.
+                        </p>
+                        <div class="flex flex-wrap gap-4 mt-10">
+                            <a href="#projects" class="btn-primary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                </svg>
+                                View Projects
+                            </a>
+                            <button class="btn-secondary" id="downloadCV">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Download CV
+                            </button>
+                        </div>
+                        <div class="flex gap-4 mt-10">
+                            <a href="#" class="social-btn" aria-label="GitHub">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-btn" aria-label="LinkedIn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                </svg>
+                            </a>
+                            <a href="mailto:contact@ayeseint.dev" class="social-btn" aria-label="Email">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="order-1 lg:order-2 flex justify-center">
+                        <div class="profile-container">
+                            <div class="profile-ring"></div>
+                            <div class="profile-image">
+                                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-28 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="reveal">
+                        <div class="glass-card p-10 float-card">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="p-6 rounded-2xl" style="background: var(--bg-secondary);">
+                                    <p class="text-4xl font-display" style="color: var(--accent);">6+</p>
+                                    <p class="mt-2 text-sm" style="color: var(--fg-muted);">Projects Completed</p>
+                                </div>
+                                <div class="p-6 rounded-2xl" style="background: var(--bg-secondary);">
+                                    <p class="text-4xl font-display" style="color: var(--accent);">3+</p>
+                                    <p class="mt-2 text-sm" style="color: var(--fg-muted);">Technologies</p>
+                                </div>
+                                <div class="p-6 rounded-2xl" style="background: var(--bg-secondary);">
+                                    <p class="text-4xl font-display" style="color: var(--accent);">1+</p>
+                                    <p class="mt-2 text-sm" style="color: var(--fg-muted);">Years Learning</p>
+                                </div>
+                                <div class="p-6 rounded-2xl" style="background: var(--bg-secondary);">
+                                    <p class="text-4xl font-display" style="color: var(--accent);">100%</p>
+                                    <p class="mt-2 text-sm" style="color: var(--fg-muted);">Dedication</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reveal" style="transition-delay: 0.2s;">
+                        <h2 class="section-heading text-4xl md:text-5xl">About Me</h2>
+                        <p class="mt-8 text-lg leading-relaxed" style="color: var(--fg-secondary);">
+                            I'm a Computer Science student from Thaton, Myanmar, with hands-on internship experience 
+                            in IT development and testing. I specialize in building robust web applications and 
+                            cross-platform mobile apps.
+                        </p>
+                        <p class="mt-6 leading-relaxed" style="color: var(--fg-secondary);">
+                            My expertise spans Laravel for backend APIs, Flutter for mobile development, and 
+                            modern databases like MySQL, Firebase, and Supabase. I have a strong interest in 
+                            QA testing and am currently exploring cloud computing technologies.
+                        </p>
+                        <p class="mt-6 leading-relaxed" style="color: var(--fg-secondary);">
+                            I believe in writing clean, maintainable code and approach every problem with a 
+                            solution-oriented mindset. Team collaboration and continuous learning are core to my 
+                            professional philosophy.
+                        </p>
+                        <div class="flex flex-wrap gap-3 mt-8">
+                            <span class="tech-badge">Laravel</span>
+                            <span class="tech-badge">Flutter</span>
+                            <span class="tech-badge">PHP</span>
+                            <span class="tech-badge">Firebase</span>
+                            <span class="tech-badge">Supabase</span>
+                            <span class="tech-badge">QA Testing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-28 px-6" style="background: var(--bg-secondary);">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="section-heading text-4xl md:text-5xl mx-auto">Featured Projects</h2>
+                    <p class="mt-8 text-lg max-w-2xl mx-auto" style="color: var(--fg-secondary);">
+                        A collection of projects showcasing my skills in web, mobile, and backend development
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-container" id="projectsGrid">
+                    <!-- Projects rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-28 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="section-heading text-4xl md:text-5xl mx-auto">Skills & Expertise</h2>
+                    <p class="mt-8 text-lg max-w-2xl mx-auto" style="color: var(--fg-secondary);">
+                        Technologies and tools I use to bring ideas to life
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-container" id="skillsGrid">
+                    <!-- Skills rendered by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-28 px-6" style="background: var(--bg-secondary);">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="section-heading text-4xl md:text-5xl mx-auto">Experience</h2>
+                </div>
+                
+                <div class="space-y-8 reveal">
+                    <div class="glass-card p-8">
+                        <div class="timeline-item pb-8">
+                            <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
+                                <div>
+                                    <h3 class="text-xl font-semibold" style="font-family: 'Cormorant Garamond', serif; font-style: italic;">IT Development Intern</h3>
+                                    <p style="color: var(--accent);">Software Development Company</p>
+                                </div>
+                                <span class="tech-badge">2024</span>
+                            </div>
+                            <ul class="space-y-3" style="color: var(--fg-secondary);">
+                                <li class="flex items-start gap-3">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="mt-1 flex-shrink-0">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Developed RESTful APIs using Laravel for web applications
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="mt-1 flex-shrink-0">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Built cross-platform mobile apps with Flutter and Firebase
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="mt-1 flex-shrink-0">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Conducted manual QA testing and API testing using Postman
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="flex flex-wrap justify-between items-start gap-4 mb-4">
+                                <div>
+                                    <h3 class="text-xl font-semibold" style="font-family: 'Cormorant Garamond', serif; font-style: italic;">Freelance Developer</h3>
+                                    <p style="color: var(--accent);">Remote</p>
+                                </div>
+                                <span class="tech-badge">2023 - Present</span>
+                            </div>
+                            <ul class="space-y-3" style="color: var(--fg-secondary);">
+                                <li class="flex items-start gap-3">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="mt-1 flex-shrink-0">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Delivered multiple web and mobile projects for clients
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="mt-1 flex-shrink-0">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Integrated third-party APIs and payment gateways
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="mt-1 flex-shrink-0">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    Collaborated with teams using Git and Agile methodologies
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-28 px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="section-heading text-4xl md:text-5xl mx-auto">Let's Connect</h2>
+                    <p class="mt-8 text-lg max-w-2xl mx-auto" style="color: var(--fg-secondary);">
+                        Have a project in mind? I'd love to hear from you
+                    </p>
+                </div>
+                
+                <div class="grid lg:grid-cols-5 gap-8">
+                    <div class="lg:col-span-3 reveal">
+                        <div class="glass-card p-8">
+                            <form id="contactForm" class="space-y-6">
+                                <div class="form-field">
+                                    <label for="name" class="block mb-2 font-medium">Your Name</label>
+                                    <input type="text" id="name" name="name" class="form-input" placeholder="John Doe" required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="email" class="block mb-2 font-medium">Email Address</label>
+                                    <input type="email" id="email" name="email" class="form-input" placeholder="john@example.com" required>
+                                </div>
+                                <div class="form-field">
+                                    <label for="message" class="block mb-2 font-medium">Your Message</label>
+                                    <textarea id="message" name="message" rows="5" class="form-input" placeholder="Tell me about your project..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary w-full">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"/>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                    </svg>
+                                    Send Message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-2 reveal" style="transition-delay: 0.2s;">
+                        <div class="glass-card p-8 h-full float-card">
+                            <h3 class="text-xl font-semibold mb-6" style="font-family: 'Cormorant Garamond', serif; font-style: italic;">Contact Info</h3>
+                            
+                            <div class="space-y-6">
+                                <a href="mailto:contact@ayeseint.dev" class="flex items-center gap-4 p-4 rounded-xl transition-all hover:scale-105" style="background: var(--bg-secondary);">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent-soft), var(--accent));">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                            <polyline points="22,6 12,13 2,6"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm" style="color: var(--fg-muted);">Email</p>
+                                        <p class="font-medium">contact@ayeseint.dev</p>
+                                    </div>
+                                </a>
+                                
+                                <div class="flex items-center gap-4 p-4 rounded-xl" style="background: var(--bg-secondary);">
+                                    <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg, var(--accent-soft), var(--accent));">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm" style="color: var(--fg-muted);">Location</p>
+                                        <p class="font-medium">Thaton, Myanmar</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 pt-8" style="border-top: 1px solid var(--glass-border);">
+                                <p class="text-sm mb-4" style="color: var(--fg-muted);">Follow me</p>
+                                <div class="flex gap-3">
+                                    <a href="#" class="social-btn" style="width: 44px; height: 44px;" aria-label="GitHub">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="social-btn" style="width: 44px; height: 44px;" aria-label="LinkedIn">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 relative" style="background: var(--bg-secondary);">
+        <div class="absolute inset-x-0 top-0 h-px" style="background: linear-gradient(90deg, transparent, var(--accent-light), transparent);"></div>
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <p style="color: var(--fg-muted);">
+                Designed & Developed by <span class="font-display italic" style="color: var(--accent);">Aye Seint</span>
+            </p>
+            <div class="flex gap-4">
+                <a href="#" class="social-btn" style="width: 40px; height: 40px;" aria-label="GitHub">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-btn" style="width: 40px; height: 40px;" aria-label="LinkedIn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ========== DATA ==========
+        const projectsData = [
+            {
+                title: "Traveler's Handbook",
+                description: "A comprehensive tourism app for Mon State featuring local attractions, travel guides, and itinerary planning with an intuitive user interface.",
+                tech: ["Flutter", "Firebase", "Dart", "Google Maps API"],
+                gradient: "linear-gradient(135deg, #f0d4de 0%, #d4899a 100%)",
+                icon: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>'
+            },
+            {
+                title: "FlutterFlix",
+                description: "Netflix-inspired streaming app UI with movie browsing, search functionality, favorites, and personalized recommendations using TMDB API.",
+                tech: ["Flutter", "Dart", "TMDB API", "Provider"],
+                gradient: "linear-gradient(135deg, #e8b4c8 0%, #c47084 100%)",
+                icon: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>'
+            },
+            {
+                title: "IT Support Chatbot",
+                description: "Intelligent chatbot for IT support queries built with Python Flask, featuring natural language processing and knowledge base integration.",
+                tech: ["Python", "Flask", "NLP", "SQLite"],
+                gradient: "linear-gradient(135deg, #d4899a 0%, #b86e80 100%)",
+                icon: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
+            },
+            {
+                title: "Jewellery Shop System",
+                description: "Enterprise-grade inventory management system for jewellery businesses with invoicing, reporting, and customer management features.",
+                tech: ["C#", "ASP.NET", "MSSQL", "Bootstrap"],
+                gradient: "linear-gradient(135deg, #f8c8dc 0%, #e8a3b5 100%)",
+                icon: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>'
+            },
+            {
+                title: "Event Booking System",
+                description: "Full-stack event management platform with user authentication, event CRUD operations, booking system, and admin dashboard.",
+                tech: ["Laravel", "PHP", "MySQL", "Bootstrap"],
+                gradient: "linear-gradient(135deg, #e8a3b5 0%, #c47084 100%)",
+                icon: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+            },
+            {
+                title: "Quiz Application",
+                description: "Interactive quiz platform with multiple categories, timed challenges, score tracking, and leaderboard functionality.",
+                tech: ["PHP", "MySQL", "JavaScript", "jQuery"],
+                gradient: "linear-gradient(135deg, #f0d4de 0%, #d4899a 100%)",
+                icon: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+            }
+        ];
+
+        const skillsData = [
+            {
+                category: "Frontend",
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+                skills: ["HTML5", "CSS3", "Bootstrap", "JavaScript", "jQuery", "Tailwind CSS"],
+                progress: 90
+            },
+            {
+                category: "Backend",
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+                skills: ["PHP", "Laravel", "REST APIs", "API Development"],
+                progress: 85
+            },
+            {
+                category: "Mobile",
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+                skills: ["Flutter", "Dart", "Cross-platform", "Mobile UI"],
+                progress: 88
+            },
+            {
+                category: "Database",
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+                skills: ["MySQL", "Firebase", "Supabase", "PostgreSQL"],
+                progress: 82
+            },
+            {
+                category: "Tools",
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+                skills: ["Git", "VS Code", "Postman", "XAMPP"],
+                progress: 90
+            },
+            {
+                category: "QA & Testing",
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+                skills: ["Manual Testing", "API Testing", "Bug Tracking", "Test Cases"],
+                progress: 75
+            }
+        ];
+
+        // ========== DOM ELEMENTS ==========
+        const themeToggle = document.getElementById('themeToggle');
+        const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+        const menuBtn = document.getElementById('menuBtn');
+        const closeDrawer = document.getElementById('closeDrawer');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const projectsGrid = document.getElementById('projectsGrid');
+        const skillsGrid = document.getElementById('skillsGrid');
+        const contactForm = document.getElementById('contactForm');
+        const downloadCV = document.getElementById('downloadCV');
+
+        // ========== THEME ==========
+        function initTheme() {
+            const saved = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleTheme();
+            }
+        });
+
+        if (mobileThemeToggle) {
+            mobileThemeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // ========== MOBILE MENU ==========
+        function openDrawer() {
+            mobileDrawer.classList.add('active');
+            drawerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawerFn() {
+            mobileDrawer.classList.remove('active');
+            drawerOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        menuBtn.addEventListener('click', openDrawer);
+        closeDrawer.addEventListener('click', closeDrawerFn);
+        drawerOverlay.addEventListener('click', closeDrawerFn);
+
+        document.querySelectorAll('.mobile-drawer .nav-link').forEach(link => {
+            link.addEventListener('click', closeDrawerFn);
+        });
+
+        // ========== RENDER PROJECTS ==========
+        function renderProjects() {
+            projectsGrid.innerHTML = projectsData.map(project => `
+                <article class="project-card">
+                    <div class="project-thumb" style="background: ${project.gradient};">
+                        <div class="project-thumb-bg"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            ${project.icon}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3" style="font-family: 'Cormorant Garamond', serif; font-style: italic;">${project.title}</h3>
+                        <p class="text-sm mb-4 leading-relaxed" style="color: var(--fg-secondary);">${project.description}</p>
+                        <div class="flex flex-wrap mb-5">
+                            ${project.tech.map(t => `<span class="tech-badge">${t}</span>`).join('')}
+                        </div>
+                        <div class="flex gap-3">
+                            <a href="#" class="btn-primary text-sm py-2 px-5">View Project</a>
+                            <a href="#" class="btn-secondary text-sm py-2 px-5">GitHub</a>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // ========== RENDER SKILLS ==========
+        function renderSkills() {
+            skillsGrid.innerHTML = skillsData.map(skill => `
+                <div class="skill-category-card" data-progress="${skill.progress}">
+                    <div class="flex items-center gap-3 mb-5">
+                        ${skill.icon}
+                        <h3 class="text-lg font-semibold" style="font-family: 'Cormorant Garamond', serif; font-style: italic;">${skill.category}</h3>
+                    </div>
+                    <div class="flex flex-wrap mb-4">
+                        ${skill.skills.map(s => `<span class="skill-item">${s}</span>`).join('')}
+                    </div>
+                    <div class="skill-progress">
+                        <div class="skill-progress-bar" style="width: ${skill.progress}%;"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========== SCROLL REVEAL ==========
+        function initScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-scale, .stagger-container');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        
+                        // Animate skill progress bars
+                        if (entry.target.classList.contains('stagger-container')) {
+                            const progressBars = entry.target.querySelectorAll('.skill-progress-bar');
+                            progressBars.forEach((bar, i) => {
+                                setTimeout(() => {
+                                    bar.classList.add('animate');
+                                }, i * 100);
+                            });
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            reveals.forEach(el => observer.observe(el));
+        }
+
+        // ========== SMOOTH SCROLL ==========
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========== FORM HANDLER ==========
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = contactForm.querySelector('button[type="submit"]');
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="animate-spin">
+                    <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+                    <path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="1"/>
+                </svg>
+                Sending...
+            `;
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Message Sent!
+                `;
+                btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                    contactForm.reset();
+                }, 2500);
+            }, 1500);
+        });
+
+        // ========== CV DOWNLOAD ==========
+        downloadCV.addEventListener('click', () => {
+            const btn = downloadCV;
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Downloading...
+            `;
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+            }, 2000);
+        });
+
+        // ========== INIT ==========
+        function init() {
+            initTheme();
+            renderProjects();
+            renderSkills();
+            
+            requestAnimationFrame(() => {
+                initScrollReveal();
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
